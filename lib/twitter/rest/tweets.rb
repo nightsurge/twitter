@@ -228,7 +228,7 @@ module Twitter
         end
         media_ids.each do |media_id|
           check_status(media_id)
-        end
+        end unless File.basename(media) !~ /\.mp4$/
         update!(status, options.merge(media_ids: media_ids.join(',')))
       end
 
