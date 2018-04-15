@@ -336,8 +336,8 @@ module Twitter
       return true if status == "succeeded"
       raise Twitter::Error::Forbidden if status == "failed"
       @status_tries += 1
-      return false if @status_tries > 10
-      sleep(1)
+      return false if @status_tries > 15
+      sleep(2)
       check_status(media_id)
     end
     
@@ -346,7 +346,7 @@ module Twitter
     #
     # @see https://dev.twitter.com/rest/public/uploading-media
     def upload(media) # rubocop:disable MethodLength, AbcSize
-      if media.size < 5_000_000
+      if media.size <= 5_000_000
         Twitter::REST::Request.new(self, :multipart_post, 'https://upload.twitter.com/1.1/media/upload.json', key: :media, file: media).perform
       elsif File.basename(media) !~ /\.mp4$/
         init = Twitter::REST::Request.new(self, :post, 'https://upload.twitter.com/1.1/media/upload.json',
